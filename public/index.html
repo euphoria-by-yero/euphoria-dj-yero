@@ -465,7 +465,7 @@ const ubicacion = document.getElementById("ubicacion");
 const unDiaAntes = eventDate - (24 * 60 * 60 * 1000);
 
 setInterval(() => {
-  const now = new Date().getTime(); // 👈 FALTABA ESTO
+  const now = new Date().getTime(); // 🔥 CLAVE
 
   if (now >= unDiaAntes) {
     ubicacion.innerHTML = `
