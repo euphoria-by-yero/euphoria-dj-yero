@@ -371,77 +371,93 @@ actualizarWhatsAppDefault();
 async function girarRuleta() {
   const cedula = document.getElementById("cedulaInput").value;
 
-if (!cedula) {
-  alert("Ingresa tu cédula");
-  return;
-}
+  if (!cedula) {
+    alert("Ingresa tu cédula");
+    return;
+  }
 
+  const btn = document.getElementById("btnGirar");
   const ruleta = document.getElementById("ruleta");
 
-  const res = await fetch('/jugar', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ cedula })
-  });
+  try {
+    btn.disabled = true; // 🔥 bloquea mientras consulta
 
-  const data = await res.json();
+    const res = await fetch('/jugar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cedula })
+    });
 
-  if (data.mensaje) {
-  document.getElementById("resultado").innerHTML =
-    "⚠️ Ya participaste con esta cédula";
+    const data = await res.json();
 
-  document.getElementById("btnGirar").disabled = true; // 🔥 AQUÍ
+    // 🚫 YA JUGÓ
+    if (data.mensaje) {
+      document.getElementById("resultado").innerHTML =
+        "⚠️ Ya participaste con esta cédula";
 
-  return;
-}
+      btn.disabled = true;
+      return;
+    }
 
-  const premio = data.premio;
+    const premio = data.premio;
 
-  let index;
-  if (premio.includes("50")) index = 0;
-  else if (premio.includes("30")) index = 1;
-  else if (premio.includes("20")) index = 2;
-  else if (premio.includes("Bebida")) index = 3;
-  else if (premio.includes("BOLETO")) index = 4;
-  else index = 0;
+    // 🎯 MAPEO CORRECTO
+    let index;
+    if (premio.includes("50")) index = 0;
+    else if (premio.includes("30")) index = 1;
+    else if (premio.includes("20")) index = 2;
+    else if (premio.includes("Bebida")) index = 3;
+    else if (premio.includes("BOLETO")) index = 4;
+    else index = 0;
 
-  const grados = (360 * 5) + (360 - (index * 45) - 22.5);
+    const grados = (360 * 5) + (360 - (index * 72) - 36); // 🔥 CORREGIDO (5 segmentos)
 
-  ruleta.style.transform = `rotate(${grados}deg)`;
+    ruleta.style.transform = `rotate(${grados}deg)`;
 
-  setTimeout(() => {
-    document.getElementById("resultado").innerHTML =
-  "🎉 GANASTE: " + premio;
-  // 🔥 MENSAJE AUTOMÁTICO
-const mensaje = `Hola, soy (pon tu nombre) y quiero una entrada para EUPHORIA
+    setTimeout(() => {
+      document.getElementById("resultado").innerHTML =
+        "🎉 GANASTE: " + premio;
+
+      // 🔥 WhatsApp dinámico
+      const mensaje = `Hola, soy (pon tu nombre) y quiero una entrada para EUPHORIA
 Mi cédula es: ${cedula}
-Gané: ${premio}
-Quiero una entrada`;
+Gané: ${premio}`;
 
-const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+      const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+      document.getElementById("btnWhatsapp").href = link;
 
-document.getElementById("btnWhatsapp").href = link;
+    }, 5000);
 
-  }, 5000);
+  } catch (error) {
+    console.error("❌ Error:", error);
+
+    document.getElementById("resultado").innerHTML =
+      "❌ Error de conexión, intenta de nuevo";
+
+    btn.disabled = false; // 🔥 reactivar si falla
+  }
 }
-
 /* ⏳ COUNTDOWN */
 const eventDate = new Date("2026-10-24T20:00:00").getTime();
 const countdown = document.getElementById("countdown");
 
 setInterval(() => {
   const now = new Date().getTime();
-  const d = eventDate - now;
+  const distance = eventDate - now;
 
-  const days = Math.floor(d / (1000*60*60*24));
-  const hours = Math.floor((d/(1000*60*60))%24);
-  const minutes = Math.floor((d/(1000*60))%60);
-  const seconds = Math.floor((d/1000)%60);
+  if (distance < 0) {
+    countdown.innerHTML = "🔥 EL EVENTO YA INICIÓ 🔥";
+    return;
+  }
 
-countdown.innerHTML = `
-  ⏳ FALTAN PARA EUPHORIA<br>
-  ${days}d ${hours}h ${minutes}m ${seconds}s
-`;
+  const dias = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const horas = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutos = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const segundos = Math.floor((distance % (1000 * 60)) / 1000);
+
+  countdown.innerHTML =
+    `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
 }, 1000);
 
 /* 📍 UBICACIÓN */

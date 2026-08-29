@@ -2,33 +2,49 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-// 👉 Middleware (DESPUÉS de crear app)
+// 👉 Middleware
 app.use(express.json());
 
-// 👉 Firebase
+// =========================
+// 🔥 FIREBASE CONFIG
+// =========================
 const admin = require('firebase-admin');
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+let serviceAccount;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-// 👇 PONLO AQUÍ
-console.log("Firebase cargado:", process.env.FIREBASE_KEY ? "SI" : "NO");
+try {
+  if (process.env.FIREBASE_KEY) {
+    // 👉 PRODUCCIÓN (Render)
+    serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+    console.log("🔥 Firebase desde RENDER");
+  } else {
+    // 👉 LOCAL
+    serviceAccount = require('./firebase-key.json');
+    console.log("🔥 Firebase desde LOCAL");
+  }
 
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+
+} catch (error) {
+  console.error("❌ Error cargando Firebase:", error);
+}
 
 const db = admin.firestore();
 
-
-// 👉 Servir frontend
+// =========================
+// 🌐 FRONTEND
+// =========================
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 👉 RUTA PRINCIPAL (opcional pero útil)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 👉 API RUEDA
+// =========================
+// 🎯 API RULETA
+// =========================
 app.post('/jugar', async (req, res) => {
   try {
     const { cedula } = req.body;
@@ -38,13 +54,12 @@ app.post('/jugar', async (req, res) => {
     }
 
     // 🔍 Verificar si ya jugó
-    // 🔍 Verificar si ya jugó (más rápido y mejor)
-const docRef = db.collection('jugadores').doc(cedula);
-const doc = await docRef.get();
+    const docRef = db.collection('jugadores').doc(cedula);
+    const doc = await docRef.get();
 
-if (doc.exists) {
-  return res.json({ mensaje: 'Ya participaste' });
-}
+    if (doc.exists) {
+      return res.json({ mensaje: 'Ya participaste' });
+    }
 
     // 🔢 CONTADOR GLOBAL
     const contadorRef = db.collection('config').doc('contador');
@@ -53,14 +68,13 @@ if (doc.exists) {
     let contador = 0;
 
     if (contadorDoc.exists) {
-      contador = contadorDoc.data().valor;
+      contador = contadorDoc.data().valor || 0;
     }
 
     contador++;
 
     // 🎁 PREMIOS
     const premios = [
-      
       "💸 50% de descuento",
       "💸 30% de descuento",
       "💸 20% de descuento",
@@ -79,27 +93,28 @@ if (doc.exists) {
 
     // 💾 Guardar jugador
     await db.collection('jugadores').doc(cedula).set({
-  cedula,
-  premio,
-  fecha: new Date()
-});
+      cedula,
+      premio,
+      fecha: new Date()
+    });
 
     // 💾 Actualizar contador
     await contadorRef.set({ valor: contador });
 
-   res.json({
-  premio
-});
+    // 🎉 RESPUESTA
+    return res.json({ premio });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error del servidor' });
+    console.error("❌ Error en /jugar:", error);
+    return res.status(500).json({ error: 'Error del servidor' });
   }
 });
 
-// 👉 SERVIDOR
-const PORT = 3000;
+// =========================
+// 🚀 SERVIDOR
+// =========================
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`🎉 Euforia funcionando en http://localhost:${PORT}`);
+  console.log(`🎉 Euforia funcionando en puerto ${PORT}`);
 });
