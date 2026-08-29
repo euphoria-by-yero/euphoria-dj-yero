@@ -284,6 +284,7 @@ a:hover {
   ⚠️ Para reclamar tu premio debes acercarte a un punto de venta autorizado  
   y presentar tu cédula original física.
 </div>
+
 <script>
 /* 🎡 CONFIG RULETA */
 const premios = [
@@ -443,21 +444,14 @@ const countdown = document.getElementById("countdown");
 
 setInterval(() => {
   const now = new Date().getTime();
-  const distance = eventDate - now;
+  const distancia = eventDate - now;
 
-  if (distance < 0) {
-    countdown.innerHTML = "🔥 EL EVENTO YA INICIÓ 🔥";
-    return;
-  }
+  const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+  const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+  const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
 
-  const dias = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const horas = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutos = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const segundos = Math.floor((distance % (1000 * 60)) / 1000);
-
-  countdown.innerHTML =
-    `${dias}d ${horas}h ${minutos}m ${segundos}s`;
-
+  countdown.innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
 }, 1000);
 
 /* 📍 UBICACIÓN */
