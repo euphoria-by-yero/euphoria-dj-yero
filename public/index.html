@@ -443,8 +443,13 @@ const eventDate = new Date("2026-10-24T20:00:00").getTime();
 const countdown = document.getElementById("countdown");
 
 setInterval(() => {
-  const now = new Date().getTime(); // 👈 ESTA LÍNEA ES LA CLAVE
+  const now = new Date().getTime();
   const d = eventDate - now;
+
+  if (d <= 0) {
+    countdown.innerHTML = "🔥 EVENTO EN VIVO 🔥";
+    return;
+  }
 
   const dias = Math.floor(d / (1000 * 60 * 60 * 24));
   const horas = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -452,21 +457,24 @@ setInterval(() => {
   const segundos = Math.floor((d % (1000 * 60)) / 1000);
 
   countdown.innerHTML =
-    dias + "d " + horas + "h " + minutos + "m " + segundos + "s";
+    `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
 }, 1000);
 /* 📍 UBICACIÓN */
 const ubicacion = document.getElementById("ubicacion");
-const reveal = eventDate - (24*60*60*1000);
+const unDiaAntes = eventDate - (24 * 60 * 60 * 1000);
 
-setInterval(()=>{
+setInterval(() => {
+  const now = new Date().getTime(); // 👈 FALTABA ESTO
+
   if (now >= unDiaAntes) {
-  ubicacion.innerHTML = `
-    📍 <a href="https://www.google.com/maps?q=UBICACION_EVENTO" target="_blank">
-      Ver ubicación del evento
-    </a>
-  `;
-}
-},1000);
+    ubicacion.innerHTML = `
+      📍 <a href="https://www.google.com/maps?q=UBICACION_EVENTO" target="_blank">
+        Ver ubicación del evento
+      </a>
+    `;
+  }
+}, 1000);
 </script>
 
 </body>
