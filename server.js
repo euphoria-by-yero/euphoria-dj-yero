@@ -7,13 +7,18 @@ app.use(express.json());
 
 // 👉 Firebase
 const admin = require('firebase-admin');
-const serviceAccount = require('./firebase-key.json');
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+// 👇 PONLO AQUÍ
+console.log("Firebase cargado:", process.env.FIREBASE_KEY ? "SI" : "NO");
+
 
 const db = admin.firestore();
+
 
 // 👉 Servir frontend
 app.use(express.static(path.join(__dirname, 'public')));
