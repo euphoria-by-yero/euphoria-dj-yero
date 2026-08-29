@@ -443,17 +443,17 @@ const eventDate = new Date("2026-10-24T20:00:00").getTime();
 const countdown = document.getElementById("countdown");
 
 setInterval(() => {
-  const now = new Date().getTime();
-  const distancia = eventDate - now;
+  const now = new Date().getTime(); // 👈 ESTA LÍNEA ES LA CLAVE
+  const d = eventDate - now;
 
-  const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
-  const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
-  const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+  const dias = Math.floor(d / (1000 * 60 * 60 * 24));
+  const horas = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutos = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
+  const segundos = Math.floor((d % (1000 * 60)) / 1000);
 
-  countdown.innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+  countdown.innerHTML =
+    dias + "d " + horas + "h " + minutos + "m " + segundos + "s";
 }, 1000);
-
 /* 📍 UBICACIÓN */
 const ubicacion = document.getElementById("ubicacion");
 const reveal = eventDate - (24*60*60*1000);
