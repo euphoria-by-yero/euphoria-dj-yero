@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Euphoria by DJ Yero</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #111, #000);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .container {
+      padding: 60px 20px;
+    }
+
+    h1 {
+      font-size: 50px;
+      color: gold;
+      text-shadow: 0 0 20px gold;
+      letter-spacing: 3px;
+    }
+    h2 {
+      font-size: 25px;
+      color: gold;
+      text-shadow: 0 0 20px gold;
+      letter-spacing: 2px;
+    }
+
+
+    .info {
+      margin-top: 20px;
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .countdown {
+  margin-top: 40px;
+  font-size: 35px;
+  color: #00ffe1;
+  text-shadow: 0 0 15px #00ffe1;
+  line-height: 1.5;
+}
+
+    .btn {
+      margin-top: 40px;
+      padding: 18px 40px;
+      font-size: 20px;
+      background: linear-gradient(45deg, gold, orange);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      color: black;
+      font-weight: bold;
+      box-shadow: 0 0 20px gold;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px gold;
+    }
+
+    .fecha-evento {
+  font-size: 28px;
+  color: gold;
+  font-weight: bold;
+  text-shadow: 0 0 20px gold, 0 0 40px orange;
+  margin-top: 15px;
+}
+
+    .ruleta-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 40px auto;
+    }
+
+    .ruleta {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 6px solid gold;
+      overflow: hidden;
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .puntero {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 30px solid gold;
+      z-index: 10;
+    }
+
+    text {
+      font-size: 6px;
+      font-weight: bold;
+      fill: black;
+    }
+    .mensaje-ruleta {
+  margin-top: 30px;
+  font-size: 18px;
+  color: #fff;
+  opacity: 0.9;
+}
+.input-cedula {
+  margin-top: 20px;
+  padding: 15px;
+  width: 250px;
+  border-radius: 20px;
+  border: none;
+  text-align: center;
+  font-size: 16px;
+}
+.resultado {
+  margin-top: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #00ffe1;
+  text-shadow: 0 0 10px #00ffe1;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.redes {
+  margin-top: 40px;
+}
+
+.redes h3 {
+  color: gold;
+  margin-bottom: 15px;
+}
+
+.redes a {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background: #222;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.redes a:hover {
+  background: gold;
+  color: black;
+}
+.puntos-venta {
+  margin-top: 40px;
+  font-size: 18px;
+}
+
+.puntos-venta h3 {
+  color: gold;
+  margin-bottom: 10px;
+}
+.mensaje-wsp {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #00ffe1;
+}
+.btn-wsp {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 15px 30px;
+  border-radius: 25px;
+  background: #25D366;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-wsp:hover {
+  transform: scale(1.05);
+}
+
+.btn-wsp.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.aviso-premio {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #ff4d4d;
+  font-weight: bold;
+}
+a {
+  color: #00ffe1;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  color: gold;
+}
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>✨ EUPHORIA ✨</h1>
+<h2>✨ By Dj Yero ✨</h2>
+  <div class="info">
+    <p>🔥 Una experiencia exclusiva</p>
+    <p>🎧 DJ Yero</p>
+    <p class="fecha-evento">🔥 24 OCTUBRE | 8:00 PM 🔥</p>
+    <p id="ubicacion">
+  📍 Ubicación secreta 🤫 | Se revela 24h antes
+</p>
+  </div>
+
+  <div class="countdown" id="countdown">Cargando...</div>
+  <div class="mensaje-ruleta">
+  🎁 Gira la ruleta y gana premios increíbles <br><br>
+  ⚠️ Ingresa tu cédula primero<br>
+  🚫 Solo tienes 1 intento
+</div>
+<input type="text" id="cedulaInput" placeholder="Ingresa tu cédula" class="input-cedula">
+ <button id="btnGirar" class="btn" onclick="girarRuleta()">🎡 GIRAR RULETA</button>
+<div id="resultado" class="resultado"></div>
+  <div class="ruleta-container">
+    <div class="puntero"></div>
+
+    <div class="ruleta" id="ruleta">
+      <svg viewBox="0 0 200 200" width="100%" height="100%">
+        <g id="segmentos"></g>
+        <g id="textos"></g>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="redes">
+  <h3>📲 Síguenos</h3>
+
+  <a href="https://www.facebook.com/share/18LMB8MrRp/" target="_blank">
+    📘 Facebook
+  </a>
+
+  <a href="https://www.instagram.com/dj_yeroby?igsi=MWJiN29mdmVyc2JnMA==" target="_blank">
+    📸 Instagram
+  </a>
+
+  <a id="btnWhatsapp" class="btn-wsp" target="_blank">
+  💬 WhatsApp
+</a>
+</div>
+<div class="mensaje-wsp">
+  💬 Escríbenos por tu entrada directamente en WhatsApp
+</div>
+
+<div class="puntos-venta">
+  <h3>🎟️ Puntos de Venta</h3>
+
+  <p>
+    📍 <a href="https://maps.app.goo.gl/jjnpCvwbzfAFojseA" target="_blank">
+      Digital World
+    </a>
+  </p>
+
+  <p>
+    📍 <a href="https://maps.app.goo.gl/NwrZaP6j3aEBG93q8" target="_blank">
+      Sistemas y comunicaciones CAMHER
+    </a>
+  </p>
+</div>
+
+<div class="aviso-premio">
+  ⚠️ Para reclamar tu premio debes acercarte a un punto de venta autorizado  
+  y presentar tu cédula original física.
+</div>
+<script>
+/* 🎡 CONFIG RULETA */
+const premios = [
+  "50% DESCUENTO",
+  "30% DESCUENTO",
+  "20% DESCUENTO",
+  "BEBIDA 🍹",
+  "BOLETO 🎟️"
+  
+];
+
+const colores = [
+  "#ff4d4d",
+  "#ff944d",
+  "#ffd11a",
+  "#4dff88",
+  "#4da6ff"
+];
+
+const svgNS = "http://www.w3.org/2000/svg";
+const centro = 100;
+const radio = 100;
+const angulo = 360 / premios.length;
+
+const grupoSegmentos = document.getElementById("segmentos");
+const grupoTextos = document.getElementById("textos");
+
+/* 🎨 DIBUJAR RULETA */
+premios.forEach((texto, i) => {
+  const start = i * angulo;
+  const end = start + angulo;
+
+  const segmento = document.createElementNS(svgNS, "path");
+  segmento.setAttribute("d", describeArc(centro, centro, radio, start, end));
+  segmento.setAttribute("fill", colores[i]);
+  grupoSegmentos.appendChild(segmento);
+
+  const pathId = "path" + i;
+  const arco = document.createElementNS(svgNS, "path");
+  arco.setAttribute("d", describeArc(centro, centro, radio - 30, start, end));
+  arco.setAttribute("id", pathId);
+  arco.setAttribute("fill", "none");
+  grupoTextos.appendChild(arco);
+
+  const text = document.createElementNS(svgNS, "text");
+  const textPath = document.createElementNS(svgNS, "textPath");
+
+  textPath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + pathId);
+  textPath.setAttribute("startOffset", "50%");
+  textPath.setAttribute("text-anchor", "middle");
+  textPath.textContent = texto;
+
+  text.appendChild(textPath);
+  grupoTextos.appendChild(text);
+});
+
+/* 🔥 FUNCIONES SVG */
+function describeArc(x, y, r, startAngle, endAngle) {
+  const start = polarToCartesian(x, y, r, endAngle);
+  const end = polarToCartesian(x, y, r, startAngle);
+
+  return ["M", x, y, "L", start.x, start.y, "A", r, r, 0, 0, 0, end.x, end.y, "Z"].join(" ");
+}
+
+function polarToCartesian(cx, cy, r, angle) {
+  const rad = (angle - 90) * Math.PI / 180.0;
+  return {
+    x: cx + (r * Math.cos(rad)),
+    y: cy + (r * Math.sin(rad))
+  };
+}
+const numero = "573052309238"; // 👈 CAMBIA ESTE
+
+function actualizarWhatsAppDefault() {
+  const mensaje = `Hola, soy (pon tu nombre) quiero una entrada para Euphoria`;
+  const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+
+  document.getElementById("btnWhatsapp").href = link;
+}
+
+// 👉 Se ejecuta al cargar la página
+actualizarWhatsAppDefault();
+
+/* 🎡 GIRO (con backend) */
+async function girarRuleta() {
+  const cedula = document.getElementById("cedulaInput").value;
+
+if (!cedula) {
+  alert("Ingresa tu cédula");
+  return;
+}
+
+  const ruleta = document.getElementById("ruleta");
+
+  const res = await fetch('/jugar', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ cedula })
+  });
+
+  const data = await res.json();
+
+  if (data.mensaje) {
+  document.getElementById("resultado").innerHTML =
+    "⚠️ Ya participaste con esta cédula";
+
+  document.getElementById("btnGirar").disabled = true; // 🔥 AQUÍ
+
+  return;
+}
+
+  const premio = data.premio;
+
+  let index;
+  if (premio.includes("50")) index = 0;
+  else if (premio.includes("30")) index = 1;
+  else if (premio.includes("20")) index = 2;
+  else if (premio.includes("Bebida")) index = 3;
+  else if (premio.includes("BOLETO")) index = 4;
+  else index = 0;
+
+  const grados = (360 * 5) + (360 - (index * 45) - 22.5);
+
+  ruleta.style.transform = `rotate(${grados}deg)`;
+
+  setTimeout(() => {
+    document.getElementById("resultado").innerHTML =
+  "🎉 GANASTE: " + premio;
+  // 🔥 MENSAJE AUTOMÁTICO
+const mensaje = `Hola, soy (pon tu nombre) y quiero una entrada para EUPHORIA
+Mi cédula es: ${cedula}
+Gané: ${premio}
+Quiero una entrada`;
+
+const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+
+document.getElementById("btnWhatsapp").href = link;
+
+  }, 5000);
+}
+
+/* ⏳ COUNTDOWN */
+const eventDate = new Date("2026-10-24T20:00:00").getTime();
+const countdown = document.getElementById("countdown");
+
+setInterval(() => {
+  const now = new Date().getTime();
+  const d = eventDate - now;
+
+  const days = Math.floor(d / (1000*60*60*24));
+  const hours = Math.floor((d/(1000*60*60))%24);
+  const minutes = Math.floor((d/(1000*60))%60);
+  const seconds = Math.floor((d/1000)%60);
+
+countdown.innerHTML = `
+  ⏳ FALTAN PARA EUPHORIA<br>
+  ${days}d ${hours}h ${minutes}m ${seconds}s
+`;
+}, 1000);
+
+/* 📍 UBICACIÓN */
+const ubicacion = document.getElementById("ubicacion");
+const reveal = eventDate - (24*60*60*1000);
+
+setInterval(()=>{
+  if (now >= unDiaAntes) {
+  ubicacion.innerHTML = `
+    📍 <a href="https://www.google.com/maps?q=UBICACION_EVENTO" target="_blank">
+      Ver ubicación del evento
+    </a>
+  `;
+}
+},1000);
+</script>
+
+</body>
+</html>
